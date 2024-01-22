@@ -12,6 +12,7 @@ function getRandomHexColor() {
 startButton.addEventListener('click', () => {
   startButton.disabled = true;
   stopButton.disabled = false;
+  document.body.style.backgroundColor = getRandomHexColor();
   timerChangeColor = setInterval(() => {
     document.body.style.backgroundColor = getRandomHexColor();
   }, 1000);
