@@ -80,7 +80,7 @@ startButton.addEventListener('click', () => {
 
 function countDown() {
   const myDate = new Date(setDate.value);
-  ms = myDate.getTime() - new Date().getTime();
+  let ms = myDate.getTime() - new Date().getTime();
   if (ms > 1000) {
     setTimer(timer, ms);
     return
