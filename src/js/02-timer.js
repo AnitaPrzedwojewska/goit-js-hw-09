@@ -70,11 +70,13 @@ startButton.addEventListener('click', () => {
   // setTimer(timer, ms);
   if (startButton.textContent == 'Start') {
     startButton.textContent = 'Stop';
+    setDate.disabled = true;
     countDown();
     timerId = setInterval(countDown, 1000);
   } else {
     clearInterval(timerId);
     startButton.textContent = "Start";
+    setDate.disabled = false;
   }
 });
 
