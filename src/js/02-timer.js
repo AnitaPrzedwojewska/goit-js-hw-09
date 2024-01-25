@@ -68,17 +68,26 @@ startButton.addEventListener('click', () => {
   // const myDate = new Date(setDate.value);
   // let ms = myDate.getTime() - new Date().getTime();
   // setTimer(timer, ms);
-  startButton.disabled = true;
-  countDown();
-  timerId = setInterval(countDown, 1000);
+  if (startButton.textContent == 'Start') {
+    startButton.textContent = 'Stop';
+    countDown();
+    timerId = setInterval(countDown, 1000);
+  } else {
+    clearInterval(timerId);
+    startButton.textContent = "Start";
+  }
 });
 
 function countDown() {
   const myDate = new Date(setDate.value);
   ms = myDate.getTime() - new Date().getTime();
-  setTimer(timer, ms);
-  if (ms <= 1000) {
-    clearInterval(timerId);
-    console.log("Counting ended.");
+  if (ms > 1000) {
+    setTimer(timer, ms);
+    return
   }
+  setTimer(timer, 0);
+  clearInterval(timerId);
+  startButton.textContent = "Start";
+  startButton.disabled = true;
+
 }
