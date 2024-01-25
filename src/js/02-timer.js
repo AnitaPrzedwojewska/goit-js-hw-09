@@ -1,8 +1,18 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+const setDate = document.querySelector('#datetime-picker');
 const startButton = document.querySelector('[data-start]');
 startButton.disabled = true;
+
+const timer = {
+  days: document.querySelector('[data-days]'),
+  hours: document.querySelector('[data-hours]'),
+  minutes: document.querySelector('[data-minutes]'),
+  seconds: document.querySelector('[data-seconds]'),
+};
+
+let timerId = null;
 
 const options = {
   enableTime: true,
@@ -11,38 +21,64 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     console.log(selectedDates[0]);
-  },
+    if (selectedDates[0] <= new Date()) {
+      alert('Please choose a date in the future!');
+      return;
+    }
+    startButton.disabled = false;
+  }
 };
 
 const fp = flatpickr('#datetime-picker', options);
-
-fp.config.onClose.push(function () {
-  console.log(fp.selectedDates);
-  const date = new Date(fp.selectedDates);
-  console.log(date);
-});
-
-
+// console.log(setDate);
+// const myDate = setDate.value;
+// console.log(myDate);
+// let ms = myDate.getTime() - new Date().getTime();
+// console.log(ms);
 
 function convertMs(ms) {
-// Number of milliseconds per unit of time
+  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
 
-// Remaining days
+  // Remaining days
   const days = Math.floor(ms / day);
-// Remaining hours
+  // Remaining hours
   const hours = Math.floor((ms % day) / hour);
-// Remaining minutes
+  // Remaining minutes
   const minutes = Math.floor(((ms % day) % hour) / minute);
-// Remaining seconds
+  // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
 }
 
-// console.log(convertMs(2000));// {days: 0, hours: 0, minutes: 0, seconds: 2}
-// console.log(convertMs(140000));// {days: 0, hours: 0, minutes: 2, seconds: 20}
-// console.log(convertMs(24140000));// {days: 0, hours: 6 minutes: 42, seconds: 20}
+function setTimer({ days, hours, minutes, seconds }, ms) {
+  let timerTime = convertMs(ms);
+
+  days.textContent = String(timerTime.days).padStart(2, '0');
+  hours.textContent = String(timerTime.hours).padStart(2, '0');
+  minutes.textContent = String(timerTime.minutes).padStart(2, '0');
+  seconds.textContent = String(timerTime.seconds).padStart(2, '0');
+}
+
+startButton.addEventListener('click', () => {
+  // const myDate = new Date(setDate.value);
+  // let ms = myDate.getTime() - new Date().getTime();
+  // setTimer(timer, ms);
+  startButton.disabled = true;
+  countDown();
+  timerId = setInterval(countDown, 1000);
+});
+
+function countDown() {
+  const myDate = new Date(setDate.value);
+  ms = myDate.getTime() - new Date().getTime();
+  setTimer(timer, ms);
+  if (ms <= 1000) {
+    clearInterval(timerId);
+    console.log("Counting ended.");
+  }
+}
