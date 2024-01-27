@@ -22,15 +22,25 @@ form.addEventListener('input', (event) => {
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  formValues = {
-    delay: form.delay.value,
-    step: form.step.value,
-    amount: form.amount.value,
+  const delay = form.delay.value;
+  const step = form.step.value;
+  const amount = form.amount.value;
+  let i = 1;
+  createPromise(i, delay)
+    .then(({ i, delay }) =>
+      Notiflix.Notify.success(`✅ Fulfilled promise ${i} in ${delay}ms`)
+    )
+    .catch(({ i, delay }) =>
+      Notiflix.Notify.failure(`❌ Rejected promise ${i} in ${delay}ms`)
+  );
+  i++;
+  while (i <= amount) {
+    // console.log(`Promise ${i}`);
+    setTimeout(createPromise(i, delay)
+      .then(({ i, delay }) => Notiflix.Notify.success(`✅ Fulfilled promise ${i} in ${delay}ms`))
+      .catch(({ i, delay }) => Notiflix.Notify.failure(`❌ Rejected promise ${i} in ${delay}ms`)), step);
+    i++;
   };
-  // console.log(formValues);
-  for (let i = 1; i <= formValues.amount; i++) {
-    console.log(`Promise ${i}`);
-  }
 });
 // console.log(formValues);
 
@@ -38,14 +48,18 @@ form.addEventListener('submit', (event) => {
 // submitButton.addEventListener('click', () => { })
 
 function createPromise(position, delay) {
-  const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    // Fulfill
-
-  } else {
-    // Reject
-
-  }
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const shouldResolve = Math.random() > 0.3;
+      if (shouldResolve) {
+        // Fulfill
+        resolve({position, delay});
+      } else {
+        // Reject
+        reject({position, delay});
+      }
+    }, delay)
+  })
 }
 
 // createPromise(2, 1500)
