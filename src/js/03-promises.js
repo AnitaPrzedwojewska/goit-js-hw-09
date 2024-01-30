@@ -2,13 +2,12 @@ import Notiflix from 'notiflix';
 
 const form = document.querySelector(".form");
 const delay = form.querySelector("[name='delay']");
-delay.setAttribute('verified', "N");
 const step = form.querySelector("[name='step']");
-step.setAttribute('verified', "N");
 const amount = form.querySelector("[name='amount']");
+// input verification status
+delay.setAttribute('verified', 'N');
+step.setAttribute('verified', 'N');
 amount.setAttribute('verified', "N");
-
-// let formValues = {};
 
 const submitButton = form.querySelector("[type='submit']");
 submitButton.disabled = true;
@@ -25,6 +24,7 @@ form.addEventListener('input', (event) => {
     step.getAttribute('verified') == 'Y' &&
     amount.getAttribute('verified') == 'Y'
   ) {
+    // running it possible
     submitButton.disabled = false;
   }
 });
@@ -46,6 +46,7 @@ form.addEventListener('submit', () => {
       .catch(message => Notiflix.Notify.failure(message));
     i++;
   };
+  form.reset();
 });
 
 function createPromise(position, delay) {
